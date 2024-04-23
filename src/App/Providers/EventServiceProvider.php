@@ -15,6 +15,11 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        ProductCreated::class => [
+            SendEmailAfterProductCreatedToAdmin::class,
+            SendEmailAfterProductCreatedToProductCreator::class,
+        ]
     ];
 
     public function boot(): void

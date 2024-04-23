@@ -70,7 +70,7 @@ class ServiceResponse
     {
         return $this->status !== "success";
     }
-	
+
 	public function isSuccessful(): bool
 	{
 		return $this->status === "success";

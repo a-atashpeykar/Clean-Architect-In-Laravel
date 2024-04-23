@@ -2,6 +2,8 @@
 
 namespace Domain\User\Models;
 
+use Domain\User\Collections\UserCollection;
+use Domain\User\QueryBuilders\UserQueryBuilder;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,4 +26,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function newCollection(array $models = []): UserCollection
+    {
+        return new UserCollection($models);
+    }
+
+    public function newEloquentBuilder($query): UserQueryBuilder
+    {
+        return new UserQueryBuilder($query);
+    }
 }
