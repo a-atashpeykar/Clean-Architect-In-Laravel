@@ -2,7 +2,7 @@
 
 namespace Domain\Auth\Services;
 
-use App\Api\Auth\Jobs\SendOtpWithSms;
+use Domain\Auth\Jobs\SendOtpWithSms;
 
 class SendSmsService
 {

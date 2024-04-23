@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Auth\Jobs;
+namespace Domain\Auth\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
