@@ -4,4 +4,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
     return response()->json("WOrking");
-});
+})->name('home');

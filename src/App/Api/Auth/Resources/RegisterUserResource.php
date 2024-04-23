@@ -27,12 +27,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     )
  * )
  */
-class RegisterUserCollection extends JsonResource
+class RegisterUserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-			"token" => $this->token,
+			"userId" => $this->id,
         ];
     }
 }

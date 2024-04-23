@@ -17,7 +17,11 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('/api/v1')
-                ->group(base_path('routes/api/v1/api.php'));
+                ->group(base_path('routes/api/v1/auth.php'));
+
+            Route::middleware('api')
+                ->prefix('/api/v1')
+                ->group(base_path('routes/api/general.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
@@ -28,6 +32,18 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('login-register-limiter', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        RateLimiter::for('login-confirm-limiter', function (Request $request) {
+            return Limit::perMinute(5)->by(url()->current() . $request->ip());
+        });
+
+        RateLimiter::for('login-resend-otp-limiter', function (Request $request) {
+            return Limit::perMinute(5)->by(url()->current() . $request->ip());
         });
 
     }

@@ -26,6 +26,7 @@ class FindUserService implements FindUserServiceInterface
         }
 
         return serviceResponse()
-            ->setData($user);
+            ->setData($user)
+            ->setMessage(__("We find user"));
     }
 }

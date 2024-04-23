@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use Domain\Auth\Abstracts\CreateOtpServiceInterface;
+use Domain\Auth\Abstracts\VerifyOtpServiceInterface;
+use Domain\Auth\Services\CreateOtpService;
+use Domain\Auth\Services\VerifyOtpService;
 use Domain\User\Abstracts\FindUserServiceInterface;
 use Domain\User\Services\FindUserService;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +27,15 @@ class CustomServiceProvider extends ServiceProvider
             FindUserService::class,
         );
 
+        $this->app->bind(
+            CreateOtpServiceInterface::class,
+            CreateOtpService::class,
+        );
+
+        $this->app->bind(
+            VerifyOtpServiceInterface::class,
+            VerifyOtpService::class,
+        );
 	}
 
 	public function boot(): void {}

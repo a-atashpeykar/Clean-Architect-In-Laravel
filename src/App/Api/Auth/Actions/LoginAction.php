@@ -2,24 +2,20 @@
 
 namespace App\Api\Auth\Actions;
 
+use App\Api\Auth\Requests\AuthRequest;
 use Domain\Auth\Abstracts\CreateOtpServiceInterface;
 use Domain\Auth\DataTransferObjects\CreateOtpDto;
 use Domain\Auth\Services\SendSmsService;
-use Exception;
-use App\Api\Auth\Resources\RegisterUserResource;
-use Domain\User\DataTransferObjects\FindUserByPhoneNumberDto;
-use Domain\Auth\DataTransferObjects\RegisterUserDto;
-use Illuminate\Http\JsonResponse;
-use App\Api\Auth\Requests\AuthRequest;
 use Domain\User\Abstracts\FindUserServiceInterface;
-use Domain\User\Abstracts\StoreUserServiceInterface;
+use Domain\User\DataTransferObjects\FindUserByPhoneNumberDto;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-
-class RegisterUserAction
+class LoginAction
 {
+
     public function __construct(
-        private StoreUserServiceInterface $storeUserService,
         private FindUserServiceInterface  $findUserService,
         private CreateOtpServiceInterface $createOtpService,
         private SendSmsService            $sendSmsService,
@@ -27,16 +23,16 @@ class RegisterUserAction
     {
     }
 
-    public function register(AuthRequest $request): JsonResponse
+    public function login(AuthRequest $request): JsonResponse
     {
         $findUserResponse = $this->findUserService->execute(
             FindUserByPhoneNumberDto::fromArray($request->findUserAllowedInputs())
         );
 
-        if (!$findUserResponse->isFailed()) {
+        if ($findUserResponse->isFailed()) {
             return responseApi(
                 status: 'failed',
-                message: __('The user has already registered'),
+                message: __('The user not registered'),
                 statusCode: 400
             );
         }
@@ -44,17 +40,9 @@ class RegisterUserAction
         try {
             DB::beginTransaction();
 
-            $storeAnswerAction = $this->storeUserService->execute(
-                RegisterUserDto::fromArray($request->registerAllowedInputs())
-            );
-
-            if ($storeAnswerAction->isFailed()) {
-                return $storeAnswerAction->getApiResponse();
-            }
-
             $createOtpResponse = $this->createOtpService->execute(
                 CreateOtpDto::fromArray([
-                    "user" => $storeAnswerAction->getData()
+                    "user" => $findUserResponse->getData()
                 ])
             );
 
@@ -64,23 +52,19 @@ class RegisterUserAction
 
             $this->sendSmsService->send(sendSmsDto: $createOtpResponse->getData());
 
-            logger()->error("User Registered Successfully", ["userId" => $storeAnswerAction->getData()->id]);
-
             DB::commit();
 
-            return $storeAnswerAction->getApiResponseCollection(RegisterUserResource::class);
-
+            return $createOtpResponse->getApiResponse();
         } catch (Exception $exception) {
-            DB::rollBack();
+            logger()->error('error sending otp', ['exception' => $exception]);
 
-            logger()->error("Error Registering User", ["exception" => $exception->getMessage()]);
+            DB::rollBack();
 
             return responseApi(
                 status: 'failed',
-                message: __('failed to Register'),
+                message: __('Otp code is not created'),
                 statusCode: 400
             );
         }
-
     }
 }

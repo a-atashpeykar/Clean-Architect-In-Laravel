@@ -1,5 +1,14 @@
 {
     "User is registered": "کاربر با موفقیت ایجاد شد.",
     "The user has already registered": "شما قبلا ثبت نام کرده اید لطفا وارد سایت بشوید.",
+    "We have not any otp code with this phone number": "کد ورود با این شماره تلفن ثبت نشده است.",
+    "Otp code is not created": "کد ورود ساخته نشده است.",
+    "Go verify otp code": "احراز هویت با کد انجام پذیر است.",
+    "Otp code is created": "کد احراز هویت ساخته شد.",
+    "Otp code is verified": "احراز هویت انجام شد.",
+    "No any otp code with this phone number": "هیچ کدی با این شماره تلفن وجود ندارد.",
+    "Not match otp code": "عدم تطابق کد احراز هویت.",
+    "Logging . . .": "در حال ورود . . .",
+    "We find user": "ما کاربر را پیدا کردیم",
     "exactly 11 characters": "شماره تلفن وارد شده باید 11 رقم باشد."
 }
